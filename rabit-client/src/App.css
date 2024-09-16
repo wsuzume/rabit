@@ -1,0 +1,78 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.todo-grid-wrapper {
+  width: 600px;
+  margin: 1rem auto;
+  display: grid;
+}
+
+.todo-grid-item {
+  width: 600px;
+  height: 60px;
+  border: 1px solid gray;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.todo-grid-item-button {
+  width: 22px;
+  height: 22px;
+  border: 1px solid gray;
+  border-radius: 2px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.todo-grid-item-title {
+  margin: 10px;
+  vertical-align: middle;
+}
+
+.todo-grid-item-input {
+  margin-left: 32px;
+}
+
+/*
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+*/
