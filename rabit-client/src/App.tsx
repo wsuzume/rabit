@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 interface ToDoSingleContent {
@@ -15,16 +15,66 @@ type ToDoTable = {
   [index: number]: ToDoListItem;
 };
 
-const todotable: ToDoTable = {
-  0: { key: 1, content: { id: 0, title: '部屋を片付ける' }},
-  1: { key: 2, content: { id: 1, title: '友達にメッセージを返す' }},
-  2: { key: 3, content: { id: 2, title: '昼寝する' }},
-  3: { key: 4, content: { id: 3, title: '夕飯を作る' }},
-  4: { key: 5, content: { id: 4, title: 'ゴールデンレトリーバーと遊ぶ' }},
-};
+// const todotable: ToDoTable = {
+//   0: { key: 1, content: { id: 0, title: '部屋を片付ける' }},
+//   1: { key: 2, content: { id: 1, title: '友達にメッセージを返す' }},
+//   2: { key: 3, content: { id: 2, title: '昼寝する' }},
+//   3: { key: 4, content: { id: 3, title: '夕飯を作る' }},
+//   4: { key: 5, content: { id: 4, title: 'ゴールデンレトリーバーと遊ぶ' }},
+// };
 
 const ToDoList: React.FC = () => {
-  const [table, setTable] = useState(todotable);
+  const [table, setTable] = useState<ToDoTable>({});
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
+  
+  // サーバー側から ToDo リストを取得する
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:1323/api/todos'); // APIエンドポイントを指定
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json(); // JSON データをパース
+
+      // content.id をインデックスとしてオブジェクトに変換
+      const table = data.reduce((acc: ToDoTable, item: ToDoListItem) => {
+        acc[item.content.id] = item;
+        return acc;
+      }, {});
+
+      setTable(table);
+      setIsInitialized(true);
+    } catch (error) {
+      console.error('Fetching error: ', error);
+    }
+  };
+
+  // クライアント側で変更された table の状態をサーバーに送信する関数
+  const sendData = async () => {
+    try {
+      const response = await fetch('http://localhost:1323/api/todos', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(Object.values(table)), // テーブルの状態をサーバーに送信
+      });
+      if (!response.ok) {
+        throw new Error('Failed to send data to the server');
+      }
+    } catch (error) {
+      console.error('Sending error: ', error);
+    }
+  };
+
+  // コンポーネントマウント時にサーバーから ToDo リストを取得する
+  useEffect(() => {
+    if (!isInitialized) {
+      fetchData(); // 最初の１回だけサーバーからデータをフェッチ
+    } else {
+      sendData(); // table が変更されたときにサーバーに送信
+    }
+  }, [table]);
 
   const updateTable = (id: number, title: string) => {
     const newTable = { ...table };

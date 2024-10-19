@@ -1,0 +1,15 @@
+services:
+  db:
+    container_name: rabit_postgres_db
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_USER: rabit
+      POSTGRES_DB: rabit_db
+      POSTGRES_PASSWORD: password
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./postgresql_data:/var/lib/postgresql/data
